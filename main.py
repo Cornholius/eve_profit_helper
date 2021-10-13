@@ -20,11 +20,23 @@ def load_settings():
 
 settings_path = os.path.abspath('config.json')
 settings = load_settings()
+errors = []
 
 # Выставление дефолтных значений если настройки невалидны
 if not os.path.isdir(settings['logs_path']):
     with open(settings_path, 'w') as f:
         settings['logs_path'] = "C:/"
+        errors.append('не задан путь к логам')
+        settings['error'] = errors
+        json.dump(settings, f, ensure_ascii=False, indent=4)
+try:
+    float(settings['broker_tax'])
+except:
+    settings['broker_tax'] = 0.0
+    errors.append('Выстави налог брокера')
+    with open(settings_path, 'w') as f:
+        settings['error'] = errors
+
         json.dump(settings, f, ensure_ascii=False, indent=4)
 
 
@@ -56,6 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         loadUi('eve_profit_helper_mainWindow.ui', self)
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
+        self.on_error.setText(' '.join(settings['error']))
 
     def set_values(self, sell, buy, profit):
         self.sell_price_value.setText(f'{sell:,.2f}'.replace(',', ' '))
@@ -66,8 +79,7 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.profit_value.setStyleSheet('color: #008000')
 
-    def on_error(self, msg):
-        self.on_error.setText(msg)
+
 
 
 class SettingsWindow(QtWidgets.QMainWindow):
