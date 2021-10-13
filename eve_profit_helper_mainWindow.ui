@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
+    <width>300</width>
     <height>180</height>
    </rect>
   </property>
@@ -21,13 +21,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>260</width>
+    <width>300</width>
     <height>180</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>260</width>
+    <width>300</width>
     <height>180</height>
    </size>
   </property>
@@ -44,6 +44,18 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="mainWindow">
+   <property name="minimumSize">
+    <size>
+     <width>300</width>
+     <height>180</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>300</width>
+     <height>180</height>
+    </size>
+   </property>
    <property name="styleSheet">
     <string notr="true">background color: #16161a</string>
    </property>
@@ -65,6 +77,9 @@
     <property name="text">
      <string>Sell price</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
    </widget>
    <widget class="QLabel" name="buy_price_name">
     <property name="geometry">
@@ -83,6 +98,9 @@
     </property>
     <property name="text">
      <string>Buy price</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="profit_name">
@@ -103,13 +121,16 @@
     <property name="text">
      <string>Profit</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
    </widget>
    <widget class="QLabel" name="sell_price_value">
     <property name="geometry">
      <rect>
       <x>140</x>
       <y>80</y>
-      <width>120</width>
+      <width>150</width>
       <height>40</height>
      </rect>
     </property>
@@ -120,7 +141,7 @@
      </font>
     </property>
     <property name="text">
-     <string>sell price</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="buy_price_value">
@@ -128,7 +149,7 @@
      <rect>
       <x>140</x>
       <y>30</y>
-      <width>120</width>
+      <width>150</width>
       <height>40</height>
      </rect>
     </property>
@@ -139,7 +160,7 @@
      </font>
     </property>
     <property name="text">
-     <string>buy price</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="profit_value">
@@ -147,7 +168,7 @@
      <rect>
       <x>140</x>
       <y>130</y>
-      <width>120</width>
+      <width>150</width>
       <height>40</height>
      </rect>
     </property>
@@ -158,13 +179,13 @@
      </font>
     </property>
     <property name="text">
-     <string>profit price</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="settings_btn">
     <property name="geometry">
      <rect>
-      <x>5</x>
+      <x>10</x>
       <y>5</y>
       <width>60</width>
       <height>25</height>
@@ -172,6 +193,33 @@
     </property>
     <property name="text">
      <string>Settings</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="on_error">
+    <property name="geometry">
+     <rect>
+      <x>85</x>
+      <y>5</y>
+      <width>200</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: red</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>

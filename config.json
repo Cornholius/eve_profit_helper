@@ -1,5 +1,7 @@
 {
-  "logs_path": "U:\\EVE\\logs\\Marketlogs",
-  "broker_tax": "0.89",
-  "sell_tax": "1.13"
+    "broker_tax": 0.89,
+    "sell_tax": 1.13,
+    "logs_path": "C:/",
+    "always_on_top": true,
+    "opacity": 1.0
 }
