@@ -16,8 +16,12 @@ class CheckSettings:
 
     def renew_settings(self):
         self.settings['error'] = self.errors
-        with open(self.settings_path, 'r') as conf:
+        with open(self.settings_path, 'w') as conf:
             json.dump(self.settings, conf, ensure_ascii=False, indent=4)
+
+    def save_settings(self, set):
+        with open(self.settings_path, 'w') as conf:
+            json.dump(set, conf, ensure_ascii=False, indent=4)
 
     def broker_tax(self):
         try:
@@ -33,19 +37,13 @@ class CheckSettings:
             self.settings['sell_tax'] = 0.0
             self.errors.append('Выстави налог на продажу')
 
+    def logs_path(self):
+        if not os.path.isdir(self.settings['logs_path']):
+            self.settings['logs_path'] = "C:/"
+            self.errors.append('не задан путь к логам')
+
     def opacity(self):
         try:
             float(self.settings['opacity'])
         except:
             self.settings['opacity'] = 1.0
-
-    def always_on_top(self):
-        try:
-            bool(self.settings['always_on_top'])
-        except:
-            self.settings['always_on_top'] = True
-
-    def logs_path(self):
-        if not os.path.isdir(self.settings['logs_path']):
-            self.settings['logs_path'] = "C:/"
-            self.errors.append('не задан путь к логам')

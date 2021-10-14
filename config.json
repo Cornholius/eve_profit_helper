@@ -1,11 +1,8 @@
 {
-    "broker_tax": 0.0,
-    "sell_tax": 1.13,
+    "broker_tax": 1.0,
+    "sell_tax": 1.1,
     "logs_path": "C:/",
     "always_on_top": true,
     "opacity": 1.0,
-    "error": [
-        "не задан путь к логам",
-        "¬ыстави налог брокера"
-    ]
+    "error": []
 }

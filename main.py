@@ -1,6 +1,7 @@
 import json
 import re
 import os
+from tests import CheckSettings
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from sys import exit, argv
@@ -8,58 +9,40 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer, Qt, QThread
-from PyQt5.QtGui import QFontDatabase, QFont
 
-
-# Загрузка сохранённых настроек
-def load_settings():
-    with open(settings_path, 'r') as conf:
-        settings = json.load(conf)
-        return settings
-
-
-settings_path = os.path.abspath('config.json')
-settings = load_settings()
-errors = []
+check = CheckSettings()
 
 # Выставление дефолтных значений если настройки невалидны
-if not os.path.isdir(settings['logs_path']):
-    with open(settings_path, 'w') as f:
-        settings['logs_path'] = "C:/"
-        errors.append('не задан путь к логам')
-        settings['error'] = errors
-        json.dump(settings, f, ensure_ascii=False, indent=4)
-try:
-    float(settings['broker_tax'])
-except:
-    settings['broker_tax'] = 0.0
-    errors.append('Выстави налог брокера')
-    with open(settings_path, 'w') as f:
-        settings['error'] = errors
-
-        json.dump(settings, f, ensure_ascii=False, indent=4)
-
+check.broker_tax()
+check.sell_tax()
+check.logs_path()
+check.opacity()
+check.renew_settings()
+settings1 = check.load_settings()
 
 
 class MyHandler(FileSystemEventHandler):
     # Класс следит за созданием лога маркета и вынимает нужную инфу
 
-    def on_created(self, event):
-        with open(event.src_path, 'r') as f:
-            lines = f.readlines()
-            sell_price = float(lines[1].split(',')[0])
-            sell_broker = (sell_price / 100) * float(settings['broker_tax'])
-            sell_tax = (sell_price / 100) * float(settings['sell_tax'])
-            sell = sell_price - sell_tax - sell_broker
+    def __init__(self):
+        self.count = [0]
 
-            for i in lines:
-                if re.search(r'\bTrue\b', i):
-                    buy_price = float(i.split(',')[0])
-                    buy_broker = (buy_price / 100) * float(settings['broker_tax'])
-                    buy = buy_price + buy_broker
-                    profit = sell - buy
-                    mainWindow.set_values(sell, buy, profit)
-                    break
+    def on_any_event(self, event):
+        self.count.append(os.path.getsize(event.src_path))
+        if self.count[-1] == self.count[-2]:
+            mainWindow.get_values(event.src_path)
+
+
+class Warden(QThread):
+    # Отдельный поток который запускает отслеживание папки маркета
+    def __init__(self, parent=None):
+        super(Warden, self).__init__(parent)
+
+    def run(self):
+        event_handler = MyHandler()
+        observer = Observer()
+        observer.schedule(event_handler, check.settings["logs_path"], recursive=False)
+        observer.start()
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -68,7 +51,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         loadUi('eve_profit_helper_mainWindow.ui', self)
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
-        self.on_error.setText(' '.join(settings['error']))
+        self.on_error.setText(' '.join(check.settings['error']))
 
     def set_values(self, sell, buy, profit):
         self.sell_price_value.setText(f'{sell:,.2f}'.replace(',', ' '))
@@ -79,7 +62,22 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.profit_value.setStyleSheet('color: #008000')
 
+    def get_values(self, file):
+        with open(file, 'r') as f:
+            lines = f.readlines()
+            sell_price = float(lines[1].split(',')[0])
+            sell_broker = (sell_price / 100) * float(check.settings['broker_tax'])
+            sell_tax = (sell_price / 100) * float(check.settings['sell_tax'])
+            sell = sell_price - sell_tax - sell_broker
 
+            for i in lines:
+                if re.search(r'\bTrue\b', i):
+                    buy_price = float(i.split(',')[0])
+                    buy_broker = (buy_price / 100) * float(check.settings['broker_tax'])
+                    buy = buy_price + buy_broker
+                    profit = sell - buy
+                    self.set_values(sell, buy, profit)
+                    break
 
 
 class SettingsWindow(QtWidgets.QMainWindow):
@@ -89,12 +87,12 @@ class SettingsWindow(QtWidgets.QMainWindow):
         loadUi('eve_profit_helper_settings.ui', self)
         self.save_and_exit_btn.clicked.connect(self.save_and_exit)
         self.market_logs_btn.clicked.connect(self.find_logs_path)
-        self.sell_tax_value.setValue(settings['sell_tax'])
-        self.broker_tax_value.setValue(settings['broker_tax'])
-        self.on_top_checkBox.setChecked(bool(settings['always_on_top']))
-        self.market_logs_path.setText(settings['logs_path'])
+        self.sell_tax_value.setValue(check.settings['sell_tax'])
+        self.broker_tax_value.setValue(check.settings['broker_tax'])
+        self.on_top_checkBox.setChecked(bool(check.settings['always_on_top']))
+        self.market_logs_path.setText(check.settings['logs_path'])
         self.opacity_slider.setRange(10, 100)
-        self.opacity_slider.setValue(int(settings['opacity'] * 100))
+        self.opacity_slider.setValue(int(check.settings['opacity'] * 100))
         self.opacity_slider.valueChanged[int].connect(self.set_opacity)
 
     def show_window(self):
@@ -104,10 +102,10 @@ class SettingsWindow(QtWidgets.QMainWindow):
     def find_logs_path(self):
         folder_path = QFileDialog.getExistingDirectory()
         self.market_logs_path.setText(folder_path)
-        with open(settings_path, 'r') as f:
+        with open(check.settings_path, 'r') as f:
             data = json.load(f)
         data['logs_path'] = folder_path
-        with open(settings_path, 'w') as f:
+        with open(check.settings_path, 'w') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
     
     def set_opacity(self):
@@ -115,30 +113,23 @@ class SettingsWindow(QtWidgets.QMainWindow):
         settingsWindow_widget.setWindowOpacity(float(self.opacity_slider.value() / 100))
 
     def save_and_exit(self):
-        with open(settings_path, 'r') as f:
-            data = json.load(f)
+        data = check.load_settings()
         data['broker_tax'] = self.broker_tax_value.value()
         data['sell_tax'] = self.sell_tax_value.value()
         data['always_on_top'] = self.on_top_checkBox.isChecked()
         data['opacity'] = float(self.opacity_slider.value() / 100)
+        check.save_settings(data)
+        # check.renew_settings()
+        check.settings = check.load_settings()
+        print(check.settings)
 
-        with open(settings_path, 'w') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        # with open(check.settings_path, 'w') as f:
+        #     json.dump(data, f, ensure_ascii=False, indent=4)
 
         settingsWindow_widget.hide()
         mainWindow_widget.show()
 
 
-class Warden(QThread):
-    # Отдельный поток который следит за логами маркета
-    def __init__(self, parent=None):
-        super(Warden, self).__init__(parent)
-
-    def run(self):
-        event_handler = MyHandler()
-        observer = Observer()
-        observer.schedule(event_handler, settings["logs_path"], recursive=False)
-        observer.start()
 
 
 
@@ -154,22 +145,13 @@ settingsWindow_widget = QtWidgets.QStackedWidget()
 settingsWindow_widget.addWidget(settingsWindow)
 
 # Вешаем на окна нужные нам флаги
-mainWindow_widget.setWindowOpacity(settings['opacity'])
-settingsWindow_widget.setWindowOpacity(settings['opacity'])
-if settings['always_on_top']:
+mainWindow_widget.setWindowOpacity(check.settings['opacity'])
+settingsWindow_widget.setWindowOpacity(check.settings['opacity'])
+if check.settings['always_on_top']:
     mainWindow_widget.setWindowFlag(Qt.WindowStaysOnTopHint)
     settingsWindow_widget.setWindowFlag(Qt.WindowStaysOnTopHint)
 
 mainWindow_widget.show()
-
-
-
-# event_handler = MyHandler()
-# observer = Observer()
-# observer.schedule(event_handler, settings["logs_path"], recursive=False)
-#
-#
-# observer.start()
 warden = Warden()
 warden.start()
 exit(app.exec_())
