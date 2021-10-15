@@ -6,13 +6,13 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from sys import exit, argv
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5.uic import loadUi
-from PyQt5.QtCore import QTimer, Qt, QThread
+from PyQt5.QtCore import Qt, QThread
 
-check = CheckSettings()
 
 # Выставление дефолтных значений если настройки невалидны
+check = CheckSettings()
 check.broker_tax()
 check.sell_tax()
 check.logs_path()
@@ -35,6 +35,7 @@ class MyHandler(FileSystemEventHandler):
 
 class Warden(QThread):
     # Отдельный поток который запускает отслеживание папки маркета
+
     def __init__(self, parent=None):
         super(Warden, self).__init__(parent)
 
@@ -49,7 +50,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi('eve_profit_helper_mainWindow.ui', self)
+        loadUi('eve_profit_helper_mainWindow2.ui', self)
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
         self.on_error.setText(' '.join(check.settings['error']))
 
@@ -62,22 +63,52 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.profit_value.setStyleSheet('color: #008000')
 
+    # Получаем значения sell и buy ордеров и добавляем шаг ставки
     def get_values(self, file):
         with open(file, 'r') as f:
             lines = f.readlines()
-            sell_price = float(lines[1].split(',')[0])
-            sell_broker = (sell_price / 100) * float(check.settings['broker_tax'])
-            sell_tax = (sell_price / 100) * float(check.settings['sell_tax'])
-            sell = sell_price - sell_tax - sell_broker
-
+            sell = float(lines[1].split(',')[0])
             for i in lines:
                 if re.search(r'\bTrue\b', i):
-                    buy_price = float(i.split(',')[0])
-                    buy_broker = (buy_price / 100) * float(check.settings['broker_tax'])
-                    buy = buy_price + buy_broker
-                    profit = sell - buy
-                    self.set_values(sell, buy, profit)
+                    buy = float(i.split(',')[0])
                     break
+
+        str_sell_price = format(sell, '.2f')[:5]
+        str_buy_price = format(buy, '.2f')[:5]
+        sell_price_with_bid = 0
+        buy_price_with_bid = 0
+
+        # если цена выше 10000
+        if '.' not in str_sell_price and '.' not in str_buy_price:
+            tail_of_sell_price = len(str(int(sell))) - 4
+            tail_of_buy_price = len(str(int(buy))) - 4
+            str_sell_price, str_buy_price = str_sell_price[:4], str_buy_price[:4]
+            sell_price_with_bid = str(int(str_sell_price) - 1) + '0' * tail_of_sell_price
+            buy_price_with_bid = str(int(str_buy_price) + 1) + '0' * tail_of_buy_price
+
+        # если цена от 1000 до 9999
+        if '.' in str_sell_price[-1] and '.' in str_buy_price[-1]:
+            str_sell_price, str_buy_price = str_sell_price[:4], str_buy_price[:4]
+            sell_price_with_bid = int(str_sell_price) + 1
+            buy_price_with_bid = int(str_buy_price) + 1
+
+        # если цена от 100 до 1000
+        if '.' in str_sell_price[-2] and '.' in str_buy_price[-2]:
+            sell_price_with_bid = round(float(str_sell_price) + 0.1, 1)
+            buy_price_with_bid = round(float(str_buy_price) + 0.1, 1)
+
+        # если цена от 1 до 100
+        if '.' in str_sell_price[:3] and '.' in str_buy_price[:3]:
+            sell_price_with_bid = sell + 0.01
+            buy_price_with_bid = buy + 0.01
+
+        sell_broker = (float(sell_price_with_bid) / 100) * float(check.settings['broker_tax'])
+        buy_broker = (float(buy_price_with_bid) / 100) * float(check.settings['broker_tax'])
+        sell_tax = (float(sell_price_with_bid) / 100) * float(check.settings['sell_tax'])
+        sell_final = sell - sell_tax - sell_broker
+        buy_final = buy + buy_broker
+        profit = sell_final - buy_final
+        self.set_values(float(sell_price_with_bid), float(buy_price_with_bid), profit)
 
 
 class SettingsWindow(QtWidgets.QMainWindow):
@@ -119,18 +150,9 @@ class SettingsWindow(QtWidgets.QMainWindow):
         data['always_on_top'] = self.on_top_checkBox.isChecked()
         data['opacity'] = float(self.opacity_slider.value() / 100)
         check.save_settings(data)
-        # check.renew_settings()
         check.settings = check.load_settings()
-        print(check.settings)
-
-        # with open(check.settings_path, 'w') as f:
-        #     json.dump(data, f, ensure_ascii=False, indent=4)
-
         settingsWindow_widget.hide()
         mainWindow_widget.show()
-
-
-
 
 
 app = QtWidgets.QApplication(argv)
@@ -146,6 +168,7 @@ settingsWindow_widget.addWidget(settingsWindow)
 
 # Вешаем на окна нужные нам флаги
 mainWindow_widget.setWindowOpacity(check.settings['opacity'])
+mainWindow_widget.setWindowFlag(Qt.FramelessWindowHint)
 settingsWindow_widget.setWindowOpacity(check.settings['opacity'])
 if check.settings['always_on_top']:
     mainWindow_widget.setWindowFlag(Qt.WindowStaysOnTopHint)
