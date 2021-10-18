@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>180</height>
+    <width>345</width>
+    <height>170</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,14 +21,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>300</width>
-    <height>180</height>
+    <width>345</width>
+    <height>170</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>300</width>
-    <height>180</height>
+    <width>345</width>
+    <height>170</height>
    </size>
   </property>
   <property name="focusPolicy">
@@ -44,18 +44,6 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="mainWindow">
-   <property name="minimumSize">
-    <size>
-     <width>300</width>
-     <height>180</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>300</width>
-     <height>180</height>
-    </size>
-   </property>
    <property name="styleSheet">
     <string notr="true">background color: #16161a</string>
    </property>
@@ -63,7 +51,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>40</y>
       <width>80</width>
       <height>40</height>
      </rect>
@@ -85,7 +73,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>80</y>
       <width>80</width>
       <height>40</height>
      </rect>
@@ -107,7 +95,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
+      <y>120</y>
       <width>80</width>
       <height>40</height>
      </rect>
@@ -128,9 +116,9 @@
    <widget class="QLabel" name="sell_price_value">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>80</y>
-      <width>150</width>
+      <x>100</x>
+      <y>40</y>
+      <width>155</width>
       <height>40</height>
      </rect>
     </property>
@@ -141,15 +129,15 @@
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>1 670 056 802.00</string>
     </property>
    </widget>
    <widget class="QLabel" name="buy_price_value">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>30</y>
-      <width>150</width>
+      <x>100</x>
+      <y>80</y>
+      <width>155</width>
       <height>40</height>
      </rect>
     </property>
@@ -160,15 +148,15 @@
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>670 056 802.00</string>
     </property>
    </widget>
    <widget class="QLabel" name="profit_value">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>130</y>
-      <width>150</width>
+      <x>100</x>
+      <y>120</y>
+      <width>155</width>
       <height>40</height>
      </rect>
     </property>
@@ -179,29 +167,29 @@
      </font>
     </property>
     <property name="text">
-     <string/>
+     <string>1 056 802.00</string>
     </property>
    </widget>
    <widget class="QPushButton" name="settings_btn">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>5</y>
-      <width>60</width>
-      <height>25</height>
+      <y>10</y>
+      <width>80</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="text">
-     <string>Settings</string>
+     <string>Настройки</string>
     </property>
    </widget>
    <widget class="QLabel" name="on_error">
     <property name="geometry">
      <rect>
-      <x>85</x>
-      <y>5</y>
+      <x>100</x>
+      <y>10</y>
       <width>200</width>
-      <height>25</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
@@ -220,6 +208,32 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="copy_sell_price_btn">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>45</y>
+      <width>75</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Копировать</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="copy_buy_price_btn">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>85</y>
+      <width>75</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Копировать</string>
     </property>
    </widget>
   </widget>

@@ -3,6 +3,6 @@
     "sell_tax": 1.13,
     "logs_path": "//st-mpf-filebox/Userhome/lyi/EVE/logs/Marketlogs",
     "always_on_top": true,
-    "opacity": 1.0,
+    "opacity": 0.43,
     "error": []
 }

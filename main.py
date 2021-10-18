@@ -6,7 +6,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from sys import exit, argv
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QVBoxLayout, QLabel, QPushButton, QApplication
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt, QThread
 
@@ -50,9 +50,33 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi('eve_profit_helper_mainWindow2.ui', self)
+        loadUi('eve_profit_helper_mainWindow.ui', self)
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
         self.on_error.setText(' '.join(check.settings['error']))
+        self.copy_sell_price_btn.clicked.connect(self.copy_to_clopboard('sell'))
+        self.copy_buy_price_btn.clicked.connect(self.copy_to_clopboard('buy'))
+        # self.old_pos = None
+
+    # def mousePressEvent(self, event):
+    #     if event.button() == Qt.LeftButton:
+    #         self.old_pos = event.pos()
+    #
+    # # вызывается при отпускании кнопки мыши
+    # def mouseReleaseEvent(self, event):
+    #     if event.button() == Qt.LeftButton:
+    #         self.old_pos = None
+    #
+    # # вызывается всякий раз, когда мышь перемещается
+    # def mouseMoveEvent(self, event):
+    #     if not self.old_pos:
+    #         return
+    #     delta = event.pos() - self.old_pos
+    #     self.move(self.pos() + delta)
+    def copy_to_clopboard(self, btn):
+        if btn == 'sell':
+            QApplication.clipboard().setText(self.sell_price_value.text())
+        else:
+            QApplication.clipboard().setText(self.buy_price_value.text)
 
     def set_values(self, sell, buy, profit):
         self.sell_price_value.setText(f'{sell:,.2f}'.replace(',', ' '))
@@ -168,7 +192,7 @@ settingsWindow_widget.addWidget(settingsWindow)
 
 # Вешаем на окна нужные нам флаги
 mainWindow_widget.setWindowOpacity(check.settings['opacity'])
-mainWindow_widget.setWindowFlag(Qt.FramelessWindowHint)
+# mainWindow_widget.setWindowFlag(Qt.FramelessWindowHint)
 settingsWindow_widget.setWindowOpacity(check.settings['opacity'])
 if check.settings['always_on_top']:
     mainWindow_widget.setWindowFlag(Qt.WindowStaysOnTopHint)
