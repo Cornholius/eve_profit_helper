@@ -5,10 +5,11 @@ from tests import CheckSettings
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from sys import exit, argv
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtSvg
 from PyQt5.QtWidgets import QFileDialog, QVBoxLayout, QLabel, QPushButton, QApplication
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt, QThread
+from PyQt5 import QtCore
 
 
 # Выставление дефолтных значений если настройки невалидны
@@ -50,28 +51,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi('eve_profit_helper_mainWindow.ui', self)
+        loadUi('mainWindow.ui', self)
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
-        self.on_error.setText(' '.join(check.settings['error']))
-        self.copy_sell_price_btn.clicked.connect(self.copy_to_clopboard('sell'))
-        self.copy_buy_price_btn.clicked.connect(self.copy_to_clopboard('buy'))
-        # self.old_pos = None
+        # self.on_error.setText(' '.join(check.settings['error']))
+        # self.copy_sell_price_btn.clicked.connect(self.copy_to_clopboard('sell'))
+        # self.copy_buy_price_btn.clicked.connect(self.copy_to_clopboard('buy'))
 
-    # def mousePressEvent(self, event):
-    #     if event.button() == Qt.LeftButton:
-    #         self.old_pos = event.pos()
-    #
-    # # вызывается при отпускании кнопки мыши
-    # def mouseReleaseEvent(self, event):
-    #     if event.button() == Qt.LeftButton:
-    #         self.old_pos = None
-    #
-    # # вызывается всякий раз, когда мышь перемещается
-    # def mouseMoveEvent(self, event):
-    #     if not self.old_pos:
-    #         return
-    #     delta = event.pos() - self.old_pos
-    #     self.move(self.pos() + delta)
+
     def copy_to_clopboard(self, btn):
         if btn == 'sell':
             QApplication.clipboard().setText(self.sell_price_value.text())
@@ -91,7 +77,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def get_values(self, file):
         with open(file, 'r') as f:
             lines = f.readlines()
-            sell = float(lines[1].split(',')[0])
+            # sell = float(lines[1].split(',')[0])
+            for i in lines:
+                line = i.split(",")
+                # print(line)
+                if line[7] == 'False' and line[-2] == '0':
+                    sell = float(line[0])
+                    break
             for i in lines:
                 if re.search(r'\bTrue\b', i):
                     buy = float(i.split(',')[0])

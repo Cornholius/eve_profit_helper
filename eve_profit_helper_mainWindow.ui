@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>345</width>
+    <width>300</width>
     <height>170</height>
    </rect>
   </property>
@@ -21,13 +21,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>345</width>
+    <width>300</width>
     <height>170</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>345</width>
+    <width>300</width>
     <height>170</height>
    </size>
   </property>
@@ -175,12 +175,22 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>80</width>
+      <width>30</width>
       <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">#settings_btn {
+	border: 1px solid;
+	border-radius: 6px;
+}</string>
+    </property>
     <property name="text">
-     <string>Настройки</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/settings.svg</normaloff>icons/settings.svg</iconset>
     </property>
    </widget>
    <widget class="QLabel" name="on_error">
@@ -215,12 +225,46 @@
      <rect>
       <x>260</x>
       <y>45</y>
-      <width>75</width>
+      <width>30</width>
       <height>30</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>30</width>
+      <height>30</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>30</width>
+      <height>30</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">#copy_sell_price_btn {
+	border: 1px solid;
+	border-radius: 6px;
+}</string>
+    </property>
     <property name="text">
-     <string>Копировать</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/copy.svg</normaloff>icons/copy.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="copy_buy_price_btn">
@@ -228,12 +272,28 @@
      <rect>
       <x>260</x>
       <y>85</y>
-      <width>75</width>
+      <width>30</width>
       <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">#copy_buy_price_btn {
+	border: 1px solid;
+	border-radius: 6px;
+}</string>
+    </property>
     <property name="text">
-     <string>Копировать</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/copy.svg</normaloff>icons/copy.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
     </property>
    </widget>
   </widget>

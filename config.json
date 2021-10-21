@@ -1,8 +1,8 @@
 {
-    "broker_tax": 0.89,
-    "sell_tax": 1.13,
+    "broker_tax": 1.39,
+    "sell_tax": 3.6,
     "logs_path": "//st-mpf-filebox/Userhome/lyi/EVE/logs/Marketlogs",
     "always_on_top": true,
-    "opacity": 0.43,
+    "opacity": 1.0,
     "error": []
 }
