@@ -55,8 +55,17 @@
      <height>40</height>
     </size>
    </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
    <property name="toolTipDuration">
     <number>-1</number>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgb(35, 35, 35);</string>
@@ -67,17 +76,51 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QPushButton" name="settings_btn">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>8</y>
-      <width>24</width>
-      <height>24</height>
-     </rect>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>10</number>
     </property>
-    <property name="styleSheet">
-     <string notr="true">#settings_btn {
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="settings_btn">
+      <property name="minimumSize">
+       <size>
+        <width>26</width>
+        <height>26</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>26</width>
+        <height>26</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#settings_btn {
 border: 1px solid;
 border-radius: 6px;
 background-color: rgb(177, 218, 63);
@@ -89,15 +132,58 @@ transition: all 1s;
 }
 
 </string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>icons/settings.svg</normaloff>icons/settings.svg</iconset>
-    </property>
-   </widget>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>icons/settings.svg</normaloff>icons/settings.svg</iconset>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="rtfm">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>26</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>26</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#rtfm {
+border: 1px solid;
+border-radius: 6px;
+background-color: rgb(177, 218, 63);
+}
+
+#rtfm:hover {
+background-color: rgb(33, 240, 209);
+transition: all 1s;
+}
+
+</string>
+      </property>
+      <property name="text">
+       <string>RTFM</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QFrame" name="content">
    <property name="enabled">
