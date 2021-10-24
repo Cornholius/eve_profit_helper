@@ -46,6 +46,11 @@
      <height>500</height>
     </size>
    </property>
+   <property name="styleSheet">
+    <string notr="true">#frame {
+background-color: rgb(45, 45, 45);
+}</string>
+   </property>
    <property name="frameShape">
     <enum>QFrame::NoFrame</enum>
    </property>
@@ -54,7 +59,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
-     <number>10</number>
+     <number>20</number>
     </property>
     <property name="leftMargin">
      <number>10</number>
@@ -76,6 +81,9 @@
         <pointsize>12</pointsize>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: #DCDDD9</string>
+      </property>
       <property name="text">
        <string>RTFM - Read The Following Manual или же Read Twice Fucking Manual</string>
       </property>
@@ -91,6 +99,9 @@
         <family>Arial</family>
         <pointsize>12</pointsize>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
        <string>Комиссия брокера - процент от суммы который забирает брокер от сделки</string>
@@ -108,6 +119,9 @@
         <pointsize>12</pointsize>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: #DCDDD9</string>
+      </property>
       <property name="text">
        <string>Налог с продаж - не вижу смысла в описании</string>
       </property>
@@ -123,6 +137,9 @@
         <family>Arial</family>
         <pointsize>12</pointsize>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
        <string>Всегда поверх окон - угадай что делает эта функция при установки или снятии галочки</string>
@@ -140,6 +157,9 @@
         <pointsize>12</pointsize>
         <stylestrategy>PreferDefault</stylestrategy>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
        <string>Радиус поиска buy ордеров - кол-во прыжков которое учитывается при поиске самого дорогого buy ордера. Если стоит 0 поиск будет производиться в пределах системы</string>
@@ -161,6 +181,9 @@
         <stylestrategy>PreferDefault</stylestrategy>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: #DCDDD9</string>
+      </property>
       <property name="text">
        <string>Радиус поиска sell ордеров - кол-во прыжков которое учитывается при поиске самого дешёвого sell ордера. Если стоит 0 поиск будет производиться в пределах системы</string>
       </property>
@@ -180,6 +203,9 @@
         <pointsize>12</pointsize>
         <stylestrategy>PreferDefault</stylestrategy>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
        <string>Путь к папке с маркет логами -  путь к папке в которой ева хранит логи маркета. По умолчанию папка находится в: C:/пользователи/{имя пользователя}/документы/EVE/logsMarketlogs/</string>
@@ -201,6 +227,9 @@
         <stylestrategy>PreferDefault</stylestrategy>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: #DCDDD9</string>
+      </property>
       <property name="text">
        <string>Прозрачность - догадайся сам что делает этот ползунок.</string>
       </property>
@@ -209,6 +238,38 @@
       </property>
       <property name="wordWrap">
        <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="ok_btn">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>36</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#ok_btn {
+border: 1px solid;
+border-radius: 6px;
+background-color: rgb(177, 218, 63);
+}
+
+#ok_btn:hover {
+background-color: rgb(33, 240, 209);
+transition: all 1s;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Ясно Понятно</string>
       </property>
      </widget>
     </item>

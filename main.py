@@ -52,10 +52,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi('mainWindow.ui', self)
+        loadUi('ui/mainWindow.ui', self)
         self.sell = self.buy = self.profit = 0
         self.file_with_prices = []
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
+        self.rtfm.clicked.connect(RtfmWindow.show_window)
         # self.on_error.setText(' '.join(check.settings['error']))
         self.copy_sell_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.sell))
         self.copy_buy_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.buy))
@@ -130,7 +131,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(SettingsWindow, self).__init__()
-        loadUi('eve_profit_helper_settings.ui', self)
+        loadUi('ui/eve_profit_helper_settings.ui', self)
         self.save_and_exit_btn.clicked.connect(self.save_and_exit)
         self.market_logs_btn.clicked.connect(self.find_logs_path)
         self.sell_tax_value.setValue(check.settings['sell_tax'])
@@ -174,9 +175,26 @@ class SettingsWindow(QtWidgets.QMainWindow):
         mainWindow_widget.show()
 
 
+class RtfmWindow(QtWidgets.QMainWindow):
+
+    def __init__(self):
+        super(RtfmWindow, self).__init__()
+        loadUi('ui/rtfm.ui', self)
+        self.ok_btn.clicked.connect(self.go_back)
+
+    
+    def show_window(self):
+        rtfmWindow_widget.show()
+        mainWindow_widget.hide()
+    
+    def go_back(self):
+        rtfmWindow_widget.hide()
+        mainWindow_widget.show()
+
+
 app = QtWidgets.QApplication(argv)
 
-# Создаём главное окно и окно настроек
+# Создаём все окна
 mainWindow = MainWindow()
 mainWindow_widget = QtWidgets.QStackedWidget()
 mainWindow_widget.addWidget(mainWindow)
@@ -184,6 +202,10 @@ mainWindow_widget.addWidget(mainWindow)
 settingsWindow = SettingsWindow()
 settingsWindow_widget = QtWidgets.QStackedWidget()
 settingsWindow_widget.addWidget(settingsWindow)
+
+rtfmWindow = RtfmWindow()
+rtfmWindow_widget = QtWidgets.QStackedWidget()
+rtfmWindow_widget.addWidget(rtfmWindow)
 
 # Вешаем на окна нужные нам флаги
 mainWindow_widget.setWindowOpacity(check.settings['opacity'])
