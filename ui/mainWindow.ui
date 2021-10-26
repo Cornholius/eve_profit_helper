@@ -143,6 +143,34 @@ transition: all 1s;
      </widget>
     </item>
     <item>
+     <widget class="QPushButton" name="no_broker_tax_btn">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>26</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#no_broker_tax_btn {
+border: 1px solid;
+border-radius: 6px;
+background-color: rgb(177, 218, 63);
+}</string>
+      </property>
+      <property name="text">
+       <string>No Broker Tax</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="rtfm">
       <property name="minimumSize">
        <size>
