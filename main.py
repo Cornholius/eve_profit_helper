@@ -19,7 +19,6 @@ check.sell_tax()
 check.logs_path()
 check.opacity()
 check.renew_settings()
-settings1 = check.load_settings()
 
 
 class MyHandler(FileSystemEventHandler):
@@ -29,6 +28,7 @@ class MyHandler(FileSystemEventHandler):
         self.count = [0]
 
     def on_modified(self, event):
+        print('123')
         self.count.append(os.path.getsize(event.src_path))
         if self.count[-1] == self.count[-2]:
             self.count = [0]
@@ -40,12 +40,16 @@ class Warden(QThread):
 
     def __init__(self, parent=None):
         super(Warden, self).__init__(parent)
+        self.observer = Observer()
 
     def run(self):
         event_handler = MyHandler()
-        observer = Observer()
-        observer.schedule(event_handler, check.settings["logs_path"], recursive=False)
-        observer.start()
+        # observer = Observer()
+        self.observer.schedule(event_handler, check.settings["logs_path"], recursive=False)
+        self.observer.start()
+
+    def restart(self):
+        self.observer.stop()
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -54,15 +58,32 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         loadUi('ui/mainWindow.ui', self)
         self.sell = self.buy = self.profit = 0
+        self.sell_price_with_bid = self.buy_price_with_bid = 0.0
         self.file_with_prices = []
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
+        self.quick_sale_btn.clicked.connect(self.quick_sale)
         self.rtfm.clicked.connect(RtfmWindow.show_window)
         # self.on_error.setText(' '.join(check.settings['error']))
-        self.copy_sell_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.sell))
-        self.copy_buy_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.buy))
+        self.copy_sell_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.sell_price_with_bid))
+        self.copy_buy_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.buy_price_with_bid))
+        self.check_quick_sale_btn_color()
 
     def copy_to_clopboard(self, data):
         QApplication.clipboard().setText(str(data))
+
+    def check_quick_sale_btn_color(self):
+        if check.settings['quick_sale']:
+            self.quick_sale_btn.setStyleSheet(f'background-color: #C23333;border: 1px solid;border-radius: 6px;')
+        else:
+            self.quick_sale_btn.setStyleSheet(f'background-color: #B1DA3F;border: 1px solid;border-radius: 6px;')
+
+    def quick_sale(self):
+        if check.settings['quick_sale']:
+            check.settings['quick_sale'] = False
+        else:
+            check.settings['quick_sale'] = True
+        check.renew_settings()
+        self.check_quick_sale_btn_color()
 
     def find_prices_in_file(self, price_type, radius):
         for i in self.file_with_prices:
@@ -74,9 +95,9 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.buy = float(line[0])
                 break
 
-    def set_values(self, sell_price_with_bid, buy_price_with_bid):
-        self.sell_price_value.setText(f'{float(sell_price_with_bid):,.2f}'.replace(',', ' '))
-        self.buy_price_value.setText(f'{float(buy_price_with_bid):,.2f}'.replace(',', ' '))
+    def set_values(self):
+        self.sell_price_value.setText(f'{float(self.sell_price_with_bid):,.2f}'.replace(',', ' '))
+        self.buy_price_value.setText(f'{float(self.buy_price_with_bid):,.2f}'.replace(',', ' '))
         self.profit_value.setText(f'{self.profit:,.2f}'.replace(',', ' '))
         if self.profit < 0:
             self.profit_value.setStyleSheet('color: #cc0000')
@@ -121,10 +142,14 @@ class MainWindow(QtWidgets.QMainWindow):
         sell_broker = (float(sell_price_with_bid) / 100) * float(check.settings['broker_tax'])
         buy_broker = (float(buy_price_with_bid) / 100) * float(check.settings['broker_tax'])
         sell_tax = (float(sell_price_with_bid) / 100) * float(check.settings['sell_tax'])
+        if check.settings['quick_sale']:
+            sell_broker = 0
         sell_final = self.sell - sell_tax - sell_broker
         buy_final = self.buy + buy_broker
         self.profit = sell_final - buy_final
-        self.set_values(sell_price_with_bid, buy_price_with_bid)
+        self.sell_price_with_bid = sell_price_with_bid
+        self.buy_price_with_bid = buy_price_with_bid
+        self.set_values()
 
 
 class SettingsWindow(QtWidgets.QMainWindow):
@@ -173,7 +198,8 @@ class SettingsWindow(QtWidgets.QMainWindow):
         check.settings = check.load_settings()
         settingsWindow_widget.hide()
         mainWindow_widget.show()
-
+        warden.restart()
+        Warden.start()
 
 class RtfmWindow(QtWidgets.QMainWindow):
 
@@ -209,7 +235,9 @@ rtfmWindow_widget.addWidget(rtfmWindow)
 
 # Вешаем на окна нужные нам флаги
 mainWindow_widget.setWindowOpacity(check.settings['opacity'])
-# mainWindow_widget.setWindowFlag(Qt.FramelessWindowHint)
+mainWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+settingsWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint)
+rtfmWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint)
 settingsWindow_widget.setWindowOpacity(check.settings['opacity'])
 if check.settings['always_on_top']:
     mainWindow_widget.setWindowFlag(Qt.WindowStaysOnTopHint)

@@ -18,6 +18,7 @@ class CheckSettings:
         self.settings['error'] = self.errors
         with open(self.settings_path, 'w') as conf:
             json.dump(self.settings, conf, ensure_ascii=False, indent=4)
+        self.load_settings()
 
     def save_settings(self, set):
         with open(self.settings_path, 'w') as conf:

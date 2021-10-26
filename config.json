@@ -1,10 +1,12 @@
 {
-    "broker_tax": 1.0,
+    "broker_tax": 1.39,
     "sell_tax": 3.6,
     "sell_radius": 0,
-    "buy_radius": 0,
-    "logs_path": "C:/",
+    "buy_radius": 1,
+    "quick_sale": false,
+    "logs_path": "//st-mpf-filebox/Userhome/lyi/EVE/logs/Marketlogs",
     "always_on_top": true,
     "opacity": 1.0,
-    "error": []
+    "error": [],
+    "noBrokerTax": true
 }

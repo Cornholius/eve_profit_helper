@@ -138,15 +138,15 @@ transition: all 1s;
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>icons/settings.svg</normaloff>icons/settings.svg</iconset>
+        <normaloff>../icons/settings.svg</normaloff>../icons/settings.svg</iconset>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="no_broker_tax_btn">
+     <widget class="QPushButton" name="quick_sale_btn">
       <property name="minimumSize">
        <size>
-        <width>100</width>
+        <width>80</width>
         <height>26</height>
        </size>
       </property>
@@ -159,14 +159,14 @@ transition: all 1s;
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">#no_broker_tax_btn {
+       <string notr="true">#quick_sale_btn {
+	background-color: rgb(177, 218, 63);
 border: 1px solid;
 border-radius: 6px;
-background-color: rgb(177, 218, 63);
 }</string>
       </property>
       <property name="text">
-       <string>No Broker Tax</string>
+       <string>quick sale</string>
       </property>
      </widget>
     </item>
@@ -411,7 +411,7 @@ border-radius: 6px;
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/copy.svg</normaloff>icons/copy.svg</iconset>
+      <normaloff>../icons/copy.svg</normaloff>../icons/copy.svg</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -439,7 +439,7 @@ background-color: rgb(177, 218, 63);</string>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/copy.svg</normaloff>icons/copy.svg</iconset>
+      <normaloff>../icons/copy.svg</normaloff>../icons/copy.svg</iconset>
     </property>
     <property name="iconSize">
      <size>
