@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QFileDialog, QVBoxLayout, QLabel, QPushButton, QAppl
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt, QThread
 from PyQt5 import QtCore
-
+import time
 
 # Выставление дефолтных значений если настройки невалидны
 check = CheckSettings()
@@ -27,8 +27,11 @@ class MyHandler(FileSystemEventHandler):
     def __init__(self):
         self.count = [0]
 
+    def on_created(self, event):
+        print(event.src_path)
+
     def on_modified(self, event):
-        print('123')
+        print(time.time())
         self.count.append(os.path.getsize(event.src_path))
         if self.count[-1] == self.count[-2]:
             self.count = [0]
@@ -44,13 +47,14 @@ class Warden(QThread):
 
     def run(self):
         event_handler = MyHandler()
-        # observer = Observer()
         self.observer.schedule(event_handler, check.settings["logs_path"], recursive=False)
         self.observer.start()
-
-    def restart(self):
-        self.observer.stop()
-
+        try:
+            while self.observer.is_alive():
+                self.observer.join(1)
+        finally:
+            self.observer.stop()
+            self.observer.join()
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -187,6 +191,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         settingsWindow_widget.setWindowOpacity(float(self.opacity_slider.value() / 100))
 
     def save_and_exit(self):
+        # warden.observer.remove_handler_for_watch(MyHandler(), check.settings['logs_path'])
         data = check.load_settings()
         data['broker_tax'] = self.broker_tax_value.value()
         data['sell_tax'] = self.sell_tax_value.value()
@@ -196,10 +201,13 @@ class SettingsWindow(QtWidgets.QMainWindow):
         data['opacity'] = float(self.opacity_slider.value() / 100)
         check.save_settings(data)
         check.settings = check.load_settings()
+        print(check.settings['logs_path'])
+        # warden.observer.schedule(MyHandler(), check.settings['logs_path'], recursive=False)
+        # warden.observer.add_handler_for_watch(MyHandler(), check.settings['logs_path'])
         settingsWindow_widget.hide()
         mainWindow_widget.show()
-        warden.restart()
-        Warden.start()
+        warden.observer.stop()
+        warden.observer.join()
 
 class RtfmWindow(QtWidgets.QMainWindow):
 

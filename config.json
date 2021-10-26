@@ -4,7 +4,7 @@
     "sell_radius": 0,
     "buy_radius": 1,
     "quick_sale": false,
-    "logs_path": "//st-mpf-filebox/Userhome/lyi/EVE/logs/Marketlogs",
+    "logs_path": "C:/Users/lyi/Desktop",
     "always_on_top": true,
     "opacity": 1.0,
     "error": [],
