@@ -1,15 +1,13 @@
 import json
-import re
 import os
 from tests import CheckSettings
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from sys import exit, argv
-from PyQt5 import QtWidgets, QtSvg
-from PyQt5.QtWidgets import QFileDialog, QVBoxLayout, QLabel, QPushButton, QApplication
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QFileDialog, QApplication
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt, QThread
-from PyQt5 import QtCore
 import time
 
 # Выставление дефолтных значений если настройки невалидны
@@ -27,11 +25,7 @@ class MyHandler(FileSystemEventHandler):
     def __init__(self):
         self.count = [0]
 
-    def on_created(self, event):
-        print(event.src_path)
-
     def on_modified(self, event):
-        print(time.time())
         self.count.append(os.path.getsize(event.src_path))
         if self.count[-1] == self.count[-2]:
             self.count = [0]
@@ -67,7 +61,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
         self.quick_sale_btn.clicked.connect(self.quick_sale)
         self.rtfm.clicked.connect(RtfmWindow.show_window)
-        # self.on_error.setText(' '.join(check.settings['error']))
         self.copy_sell_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.sell_price_with_bid))
         self.copy_buy_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.buy_price_with_bid))
         self.check_quick_sale_btn_color()
@@ -191,7 +184,6 @@ class SettingsWindow(QtWidgets.QMainWindow):
         settingsWindow_widget.setWindowOpacity(float(self.opacity_slider.value() / 100))
 
     def save_and_exit(self):
-        # warden.observer.remove_handler_for_watch(MyHandler(), check.settings['logs_path'])
         data = check.load_settings()
         data['broker_tax'] = self.broker_tax_value.value()
         data['sell_tax'] = self.sell_tax_value.value()
@@ -201,13 +193,9 @@ class SettingsWindow(QtWidgets.QMainWindow):
         data['opacity'] = float(self.opacity_slider.value() / 100)
         check.save_settings(data)
         check.settings = check.load_settings()
-        print(check.settings['logs_path'])
-        # warden.observer.schedule(MyHandler(), check.settings['logs_path'], recursive=False)
-        # warden.observer.add_handler_for_watch(MyHandler(), check.settings['logs_path'])
         settingsWindow_widget.hide()
         mainWindow_widget.show()
-        warden.observer.stop()
-        warden.observer.join()
+
 
 class RtfmWindow(QtWidgets.QMainWindow):
 
