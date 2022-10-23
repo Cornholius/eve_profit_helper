@@ -1,12 +1,12 @@
 {
-    "broker_tax": 1.39,
+    "broker_tax": 1.38,
     "sell_tax": 3.6,
     "sell_radius": 0,
     "buy_radius": 1,
     "quick_sale": false,
-    "logs_path": "C:/Users/lyi/Desktop",
+    "logs_path": "C:/Users/ylays/OneDrive/Документы/EVE/logs/Marketlogs",
     "always_on_top": true,
-    "opacity": 1.0,
+    "opacity": 0.78,
     "error": [],
     "noBrokerTax": true
 }

@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>620</width>
-    <height>500</height>
+    <height>650</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>620</width>
-    <height>500</height>
+    <height>650</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>620</width>
-    <height>500</height>
+    <height>650</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -31,19 +31,19 @@
      <x>0</x>
      <y>0</y>
      <width>620</width>
-     <height>500</height>
+     <height>650</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
      <width>620</width>
-     <height>500</height>
+     <height>650</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>620</width>
-     <height>500</height>
+     <height>650</height>
     </size>
    </property>
    <property name="styleSheet">
@@ -85,7 +85,7 @@ background-color: rgb(45, 45, 45);
        <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
-       <string>RTFM - Read The Following Manual или же Read Twice Fucking Manual</string>
+       <string>&lt;b&gt;RTFM&lt;/b&gt; - Read The Following Manual или же Read Twice Fucking Manual</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -104,7 +104,7 @@ background-color: rgb(45, 45, 45);
        <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
-       <string>Комиссия брокера - процент от суммы который забирает брокер от сделки</string>
+       <string>&lt;b&gt;Комиссия брокера&lt;/b&gt; - процент от суммы который забирает брокер от сделки</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -123,7 +123,7 @@ background-color: rgb(45, 45, 45);
        <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
-       <string>Налог с продаж - не вижу смысла в описании</string>
+       <string>&lt;b&gt;Налог с продаж&lt;/b&gt; - не вижу смысла в описании</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -142,7 +142,7 @@ background-color: rgb(45, 45, 45);
        <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
-       <string>Всегда поверх окон - угадай что делает эта функция при установки или снятии галочки</string>
+       <string>&lt;b&gt;Всегда поверх окон&lt;/b&gt; - угадай что делает эта функция при установки или снятии галочки</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -162,7 +162,7 @@ background-color: rgb(45, 45, 45);
        <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
-       <string>Радиус поиска buy ордеров - кол-во прыжков которое учитывается при поиске самого дорогого buy ордера. Если стоит 0 поиск будет производиться в пределах системы</string>
+       <string>&lt;b&gt;Радиус поиска buy ордеров&lt;/b&gt; - кол-во прыжков которое учитывается при поиске самого дорогого buy ордера. Если стоит 0 поиск будет производиться в пределах системы</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -185,7 +185,7 @@ background-color: rgb(45, 45, 45);
        <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
-       <string>Радиус поиска sell ордеров - кол-во прыжков которое учитывается при поиске самого дешёвого sell ордера. Если стоит 0 поиск будет производиться в пределах системы</string>
+       <string>&lt;b&gt;Радиус поиска sell ордеров&lt;/b&gt; - кол-во прыжков которое учитывается при поиске самого дешёвого sell ордера. Если стоит 0 поиск будет производиться в пределах системы</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -208,7 +208,7 @@ background-color: rgb(45, 45, 45);
        <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
-       <string>Путь к папке с маркет логами -  путь к папке в которой ева хранит логи маркета. По умолчанию папка находится в: C:/пользователи/{имя пользователя}/документы/EVE/logsMarketlogs/</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Путь к папке с маркет логами&lt;/span&gt; - путь к папке в которой ева хранит логи маркета. По умолчанию папка находится в: C:/пользователи/{имя пользователя}/документы/EVE/logsMarketlogs/&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#dc0000;&quot;&gt;После изменения пути требуется перезапуск программы.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -231,7 +231,7 @@ background-color: rgb(45, 45, 45);
        <string notr="true">color: #DCDDD9</string>
       </property>
       <property name="text">
-       <string>Прозрачность - догадайся сам что делает этот ползунок.</string>
+       <string>&lt;b&gt;Прозрачность&lt;/b&gt; - догадайся сам что делает этот ползунок.</string>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>

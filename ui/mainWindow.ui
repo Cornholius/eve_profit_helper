@@ -273,7 +273,7 @@ background-color: rgb(45, 45, 45);
      <string notr="true">color: #DCDDD9</string>
     </property>
     <property name="text">
-     <string>1 670 056 802.00</string>
+     <string>0.00</string>
     </property>
    </widget>
    <widget class="QLabel" name="profit_name">
@@ -370,7 +370,7 @@ background-color: rgb(45, 45, 45);
      <string notr="true">color: #DCDDD9</string>
     </property>
     <property name="text">
-     <string>670 056 802.00</string>
+     <string>0.00</string>
     </property>
    </widget>
    <widget class="QPushButton" name="copy_sell_price_btn">
@@ -467,7 +467,7 @@ background-color: rgb(177, 218, 63);</string>
      <string notr="true">color: #DCDDD9</string>
     </property>
     <property name="text">
-     <string>1 056 802.00</string>
+     <string>0.00</string>
     </property>
    </widget>
   </widget>

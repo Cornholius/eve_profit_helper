@@ -109,8 +109,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.find_prices_in_file('True', check.settings['buy_radius'])
         str_sell_price = format(self.sell, '.2f')[:5]
         str_buy_price = format(self.buy, '.2f')[:5]
-        sell_price_with_bid = 0
-        buy_price_with_bid = 0
+        sell_price_with_bid = float(0)
+        buy_price_with_bid = float(0)
 
         # если цена выше 10000
         if '.' not in str_sell_price and '.' not in str_buy_price:
@@ -136,24 +136,26 @@ class MainWindow(QtWidgets.QMainWindow):
             sell_price_with_bid = self.sell + 0.01
             buy_price_with_bid = self.buy + 0.01
 
-        sell_broker = (float(sell_price_with_bid) / 100) * float(check.settings['broker_tax'])
-        buy_broker = (float(buy_price_with_bid) / 100) * float(check.settings['broker_tax'])
-        sell_tax = (float(sell_price_with_bid) / 100) * float(check.settings['sell_tax'])
         if check.settings['quick_sale']:
-            sell_broker = 0
-        sell_final = self.sell - sell_tax - sell_broker
-        buy_final = self.buy + buy_broker
-        self.profit = sell_final - buy_final
+            broker_tax = 0
+        else:
+            broker_tax = float(check.settings['broker_tax'])
+        sell_tax = float(check.settings['sell_tax'])
+        sell_price = float(sell_price_with_bid)
+        sell_price_with_tax = float(sell_price_with_bid) * ((sell_tax + broker_tax) / 100)
+        buy_price = float(buy_price_with_bid) + float(buy_price_with_bid) * 0.01
+
+        self.profit = (sell_price - sell_price_with_tax) - buy_price
         self.sell_price_with_bid = sell_price_with_bid
         self.buy_price_with_bid = buy_price_with_bid
         self.set_values()
 
-
+# (цена продажи - цена продажи * 0,04984) * кол-во - итоговая цена покупки
 class SettingsWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(SettingsWindow, self).__init__()
-        loadUi('ui/eve_profit_helper_settings.ui', self)
+        loadUi('ui/settings.ui', self)
         self.save_and_exit_btn.clicked.connect(self.save_and_exit)
         self.market_logs_btn.clicked.connect(self.find_logs_path)
         self.sell_tax_value.setValue(check.settings['sell_tax'])
