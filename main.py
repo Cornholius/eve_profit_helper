@@ -8,7 +8,8 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import Qt, QThread
-import time
+from time import sleep
+
 
 # Выставление дефолтных значений если настройки невалидны
 check = CheckSettings()
@@ -29,6 +30,7 @@ class MyHandler(FileSystemEventHandler):
         self.count.append(os.path.getsize(event.src_path))
         if self.count[-1] == self.count[-2]:
             self.count = [0]
+            sleep(0.2)
             mainWindow.get_values(event.src_path)
 
 
@@ -50,13 +52,14 @@ class Warden(QThread):
             self.observer.stop()
             self.observer.join()
 
+
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
         loadUi('ui/mainWindow.ui', self)
         self.sell = self.buy = self.profit = 0
-        self.sell_price_with_bid = self.buy_price_with_bid = 0.0
+        self.sell_price = self.buy_price = 0.0
         self.broker_fee = 0
         self.sales_tax = 0
         self.margin = 0
@@ -64,8 +67,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
         self.quick_sale_btn.clicked.connect(self.quick_sale)
         self.rtfm.clicked.connect(RtfmWindow.show_window)
-        self.copy_sell_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.sell_price_with_bid))
-        self.copy_buy_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.buy_price_with_bid))
+        self.copy_sell_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.sell_price))
+        self.copy_buy_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.buy_price))
         self.check_quick_sale_btn_color()
 
     def copy_to_clopboard(self, data):
@@ -91,27 +94,35 @@ class MainWindow(QtWidgets.QMainWindow):
             if line[7] == price_type and int(line[-2]) == radius:
                 if price_type == 'False':
                     self.sell = float(line[0])
+                    print(self.sell)
+                    break
                 else:
                     self.buy = float(line[0])
-                break
+                    print(self.buy)
+                    break
+                # break
 
     # подставляем цены в окно программы
     def set_values(self):
-        self.sell_price_value.setText(f'{float(self.sell_price_with_bid):,.2f}'.replace(',', ' '))
-        self.buy_price_value.setText(f'{float(self.buy_price_with_bid):,.2f}'.replace(',', ' '))
+        self.sell_price_value.setText(f'{float(self.sell_price):,.2f}'.replace(',', ' '))
+        self.buy_price_value.setText(f'{float(self.buy_price):,.2f}'.replace(',', ' '))
         self.broker_fee_value.setText(f'-{self.broker_fee:,.2f}'.replace(',', ' '))
         self.sales_tax_value.setText(f'-{self.sales_tax:,.2f}'.replace(',', ' '))
         self.profit_value.setText(f'{self.profit:,.2f}'.replace(',', ' '))
         self.margin_value.setText(f'{round(self.margin, 2)}%')
         if self.profit < 0:
             self.profit_value.setStyleSheet('color: #cc0000')
+            self.margin_value.setStyleSheet('color: #cc0000')
         else:
             self.profit_value.setStyleSheet('color: #008000')
+            self.margin_value.setStyleSheet('color: #008000')
+
         self.broker_fee_value.setStyleSheet('color: #cc0000')
         self.sales_tax_value.setStyleSheet('color: #cc0000')
 
     # Получаем значения sell и buy ордеров и добавляем шаг ставки
     def get_values(self, file):
+        print('get values')
         with open(file, 'r') as f:
             self.file_with_prices = f.readlines()
         self.find_prices_in_file('False', check.settings['sell_radius'])
@@ -151,21 +162,16 @@ class MainWindow(QtWidgets.QMainWindow):
             broker_tax = float(check.settings['broker_tax'])
         sell_tax = float(check.settings['sell_tax'])
 
+        print("buy_price_with_bid", buy_price_with_bid)
         #   готовые цены для выставления ордера
-        # sell_price = float(sell_price_with_bid)
-        # buy_price = float(buy_price_with_bid) + float(buy_price_with_bid) * 0.01
-        sell_price_with_tax = float(sell_price_with_bid) * ((sell_tax + broker_tax) / 100)
-
-        self.sell_price_with_bid = float(sell_price_with_bid)
-        self.buy_price_with_bid = float(buy_price_with_bid) + float(buy_price_with_bid) * 0.01
-        self.broker_fee = self.sell_price_with_bid * broker_tax / 100
-        self.sales_tax = self.sell_price_with_bid * sell_tax / 100
-        self.profit = self.sell_price_with_bid - self.broker_fee - self.sales_tax - self.buy_price_with_bid
-        self.margin = (self.sell_price_with_bid - self.buy_price_with_bid - self.broker_fee - self.sales_tax) / self.sell_price_with_bid * 100
+        self.sell_price = float(sell_price_with_bid)
+        # self.buy_price = float(buy_price_with_bid) + float(buy_price_with_bid) * 0.01
+        self.buy_price = float(buy_price_with_bid)
+        self.broker_fee = self.sell_price * broker_tax / 100
+        self.sales_tax = self.sell_price * sell_tax / 100
+        self.profit = self.sell_price - self.broker_fee - self.sales_tax - (self.buy_price + self.buy_price * 0.0138)
+        self.margin = (self.sell_price - self.buy_price - self.broker_fee - self.sales_tax) / self.sell_price * 100
         self.set_values()
-        print('sell_price_with_tax', sell_price_with_tax)
-        # print('sell_price_with_tax', sell_price_with_tax)
-        print('sell_price', self.sell_price_with_bid)
 
 
 # (цена продажи - цена продажи * 0,04984) * кол-во - итоговая цена покупки
@@ -224,7 +230,6 @@ class RtfmWindow(QtWidgets.QMainWindow):
         loadUi('ui/rtfm.ui', self)
         self.ok_btn.clicked.connect(self.go_back)
 
-    
     def show_window(self):
         rtfmWindow_widget.show()
         mainWindow_widget.hide()
