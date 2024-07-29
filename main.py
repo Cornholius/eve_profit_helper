@@ -57,6 +57,9 @@ class MainWindow(QtWidgets.QMainWindow):
         loadUi('ui/mainWindow.ui', self)
         self.sell = self.buy = self.profit = 0
         self.sell_price_with_bid = self.buy_price_with_bid = 0.0
+        self.broker_fee = 0
+        self.sales_tax = 0
+        self.margin = 0
         self.file_with_prices = []
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
         self.quick_sale_btn.clicked.connect(self.quick_sale)
@@ -92,14 +95,20 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.buy = float(line[0])
                 break
 
+    # подставляем цены в окно программы
     def set_values(self):
         self.sell_price_value.setText(f'{float(self.sell_price_with_bid):,.2f}'.replace(',', ' '))
         self.buy_price_value.setText(f'{float(self.buy_price_with_bid):,.2f}'.replace(',', ' '))
+        self.broker_fee_value.setText(f'-{self.broker_fee:,.2f}'.replace(',', ' '))
+        self.sales_tax_value.setText(f'-{self.sales_tax:,.2f}'.replace(',', ' '))
         self.profit_value.setText(f'{self.profit:,.2f}'.replace(',', ' '))
+        self.margin_value.setText(f'{round(self.margin, 2)}%')
         if self.profit < 0:
             self.profit_value.setStyleSheet('color: #cc0000')
         else:
             self.profit_value.setStyleSheet('color: #008000')
+        self.broker_fee_value.setStyleSheet('color: #cc0000')
+        self.sales_tax_value.setStyleSheet('color: #cc0000')
 
     # Получаем значения sell и buy ордеров и добавляем шаг ставки
     def get_values(self, file):
@@ -141,14 +150,23 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             broker_tax = float(check.settings['broker_tax'])
         sell_tax = float(check.settings['sell_tax'])
-        sell_price = float(sell_price_with_bid)
-        sell_price_with_tax = float(sell_price_with_bid) * ((sell_tax + broker_tax) / 100)
-        buy_price = float(buy_price_with_bid) + float(buy_price_with_bid) * 0.01
 
-        self.profit = (sell_price - sell_price_with_tax) - buy_price
-        self.sell_price_with_bid = sell_price_with_bid
-        self.buy_price_with_bid = buy_price_with_bid
+        #   готовые цены для выставления ордера
+        # sell_price = float(sell_price_with_bid)
+        # buy_price = float(buy_price_with_bid) + float(buy_price_with_bid) * 0.01
+        sell_price_with_tax = float(sell_price_with_bid) * ((sell_tax + broker_tax) / 100)
+
+        self.sell_price_with_bid = float(sell_price_with_bid)
+        self.buy_price_with_bid = float(buy_price_with_bid) + float(buy_price_with_bid) * 0.01
+        self.broker_fee = self.sell_price_with_bid * broker_tax / 100
+        self.sales_tax = self.sell_price_with_bid * sell_tax / 100
+        self.profit = self.sell_price_with_bid - self.broker_fee - self.sales_tax - self.buy_price_with_bid
+        self.margin = (self.sell_price_with_bid - self.buy_price_with_bid - self.broker_fee - self.sales_tax) / self.sell_price_with_bid * 100
         self.set_values()
+        print('sell_price_with_tax', sell_price_with_tax)
+        # print('sell_price_with_tax', sell_price_with_tax)
+        print('sell_price', self.sell_price_with_bid)
+
 
 # (цена продажи - цена продажи * 0,04984) * кол-во - итоговая цена покупки
 class SettingsWindow(QtWidgets.QMainWindow):

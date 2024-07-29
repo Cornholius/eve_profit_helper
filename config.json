@@ -1,8 +1,8 @@
 {
     "broker_tax": 1.38,
-    "sell_tax": 3.6,
+    "sell_tax": 2.02,
     "sell_radius": 0,
-    "buy_radius": 1,
+    "buy_radius": 0,
     "quick_sale": false,
     "logs_path": "C:/Users/ylays/OneDrive/Документы/EVE/logs/Marketlogs",
     "always_on_top": true,
