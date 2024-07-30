@@ -20,26 +20,26 @@ check.opacity()
 check.renew_settings()
 
 
+# Класс следит за созданием лога Маркета и вынимает нужную инфу
 class MyHandler(FileSystemEventHandler):
-    # Класс следит за созданием лога маркета и вынимает нужную инфу
 
     def __init__(self):
         self.count = [0]
 
     def on_modified(self, event):
         self.count.append(os.path.getsize(event.src_path))
-        print(self.count)
         if self.count[-1] == self.count[-2]:
             print('file finished')
             sleep(0.3)
             with open(event.src_path, 'r') as file:
                 mainWindow.file_with_prices = file.readlines()
-            mainWindow.get_values()
             self.count = [0]
+            sleep(0.2)
+            mainWindow.get_values()
 
 
+# Отдельный поток который запускает отслеживание папки маркета
 class Warden(QThread):
-    # Отдельный поток который запускает отслеживание папки маркета
 
     def __init__(self, parent=None):
         super(Warden, self).__init__(parent)
@@ -62,11 +62,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         loadUi('ui/mainWindow.ui', self)
-        self.sell = self.buy = self.profit = 0
+        self.sell = self.buy = self.profit = self.broker_fee = self.sales_tax = self.margin = 0
         self.sell_price = self.buy_price = 0.0
-        self.broker_fee = 0
-        self.sales_tax = 0
-        self.margin = 0
         self.file_with_prices = []
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
         self.quick_sale_btn.clicked.connect(self.quick_sale)
@@ -92,17 +89,21 @@ class MainWindow(QtWidgets.QMainWindow):
         check.renew_settings()
         self.check_quick_sale_btn_color()
 
-    def find_prices_in_file(self, price_type, radius):
+    def find_prices_in_file(self, sell_radius):
+        sell_price = True
         for i in self.file_with_prices:
             line = i.split(",")
-            if line[7] == price_type and int(line[-2]) == radius:
-                if price_type == 'False':
-                    self.sell = float(line[0])
-                    print('found sell price', self.sell)
-                else:
-                    self.buy = float(line[0])
-                    print('found buy price', self.buy)
+            if line[7] == 'False' and int(line[-2]) == sell_radius and sell_price:
+                print(line)
+                self.sell = float(line[0])
+                print('found sell price', self.sell)
+                sell_price = False
+            if line[7] == 'True' and ((int(line[3]) - int(line[-2])) >= 0 or line[3] == '32767'):
+                print(line)
+                self.buy = float(line[0])
+                print('found buy price', self.buy)
                 break
+            # break
 
     # подставляем цены в окно программы
     def set_values(self):
@@ -125,10 +126,8 @@ class MainWindow(QtWidgets.QMainWindow):
     # Получаем значения sell и buy ордеров и добавляем шаг ставки
     def get_values(self):
         print('get values')
-        # with open(file, 'r') as f:
-        #     self.file_with_prices = f.readlines()
-        self.find_prices_in_file('False', check.settings['sell_radius'])
-        self.find_prices_in_file('True', check.settings['buy_radius'])
+        self.find_prices_in_file(check.settings['sell_radius'])
+        # self.find_prices_in_file(check.settings['buy_radius'])
         str_sell_price = format(self.sell, '.2f')[:5]
         str_buy_price = format(self.buy, '.2f')[:5]
         sell_price_with_bid = float(0)
@@ -166,8 +165,6 @@ class MainWindow(QtWidgets.QMainWindow):
             broker_tax = float(check.settings['broker_tax'])
         sell_tax = float(check.settings['sell_tax'])
 
-        print('buy_price', self.buy_price)
-        print('sell_price', self.sell_price)
         #   готовые цены для выставления ордера
         self.sell_price = float(sell_price_with_bid)
         self.buy_price = float(buy_price_with_bid)
@@ -176,6 +173,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.profit = self.sell_price - self.broker_fee - self.sales_tax - (self.buy_price + self.buy_price * 0.0138)
         self.margin = (self.sell_price - self.buy_price - self.broker_fee - self.sales_tax) / self.sell_price * 100
         self.set_values()
+        print('buy_price', self.buy_price)
+        print('sell_price', self.sell_price)
 
 
 # (цена продажи - цена продажи * 0,04984) * кол-во - итоговая цена покупки
