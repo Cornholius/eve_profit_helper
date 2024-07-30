@@ -28,10 +28,14 @@ class MyHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         self.count.append(os.path.getsize(event.src_path))
+        print(self.count)
         if self.count[-1] == self.count[-2]:
+            print('file finished')
+            sleep(0.3)
+            with open(event.src_path, 'r') as file:
+                mainWindow.file_with_prices = file.readlines()
+            mainWindow.get_values()
             self.count = [0]
-            sleep(0.2)
-            mainWindow.get_values(event.src_path)
 
 
 class Warden(QThread):
@@ -94,13 +98,11 @@ class MainWindow(QtWidgets.QMainWindow):
             if line[7] == price_type and int(line[-2]) == radius:
                 if price_type == 'False':
                     self.sell = float(line[0])
-                    print(self.sell)
-                    break
+                    print('found sell price', self.sell)
                 else:
                     self.buy = float(line[0])
-                    print(self.buy)
-                    break
-                # break
+                    print('found buy price', self.buy)
+                break
 
     # подставляем цены в окно программы
     def set_values(self):
@@ -121,16 +123,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sales_tax_value.setStyleSheet('color: #cc0000')
 
     # Получаем значения sell и buy ордеров и добавляем шаг ставки
-    def get_values(self, file):
+    def get_values(self):
         print('get values')
-        with open(file, 'r') as f:
-            self.file_with_prices = f.readlines()
+        # with open(file, 'r') as f:
+        #     self.file_with_prices = f.readlines()
         self.find_prices_in_file('False', check.settings['sell_radius'])
         self.find_prices_in_file('True', check.settings['buy_radius'])
         str_sell_price = format(self.sell, '.2f')[:5]
         str_buy_price = format(self.buy, '.2f')[:5]
         sell_price_with_bid = float(0)
         buy_price_with_bid = float(0)
+        print("str_sell_price", str_sell_price)
+        print("str_buy_price", str_buy_price)
 
         # если цена выше 10000
         if '.' not in str_sell_price and '.' not in str_buy_price:
@@ -162,10 +166,10 @@ class MainWindow(QtWidgets.QMainWindow):
             broker_tax = float(check.settings['broker_tax'])
         sell_tax = float(check.settings['sell_tax'])
 
-        print("buy_price_with_bid", buy_price_with_bid)
+        print('buy_price', self.buy_price)
+        print('sell_price', self.sell_price)
         #   готовые цены для выставления ордера
         self.sell_price = float(sell_price_with_bid)
-        # self.buy_price = float(buy_price_with_bid) + float(buy_price_with_bid) * 0.01
         self.buy_price = float(buy_price_with_bid)
         self.broker_fee = self.sell_price * broker_tax / 100
         self.sales_tax = self.sell_price * sell_tax / 100

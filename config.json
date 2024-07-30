@@ -6,7 +6,7 @@
     "quick_sale": false,
     "logs_path": "C:/Users/ylays/OneDrive/Документы/EVE/logs/Marketlogs",
     "always_on_top": true,
-    "opacity": 0.78,
+    "opacity": 1.0,
     "error": [],
     "noBrokerTax": true
 }

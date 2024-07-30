@@ -20,21 +20,21 @@ class CheckSettings:
             json.dump(self.settings, conf, ensure_ascii=False, indent=4)
         self.load_settings()
 
-    def save_settings(self, set):
+    def save_settings(self, sett):
         with open(self.settings_path, 'w') as conf:
-            json.dump(set, conf, ensure_ascii=False, indent=4)
+            json.dump(sett, conf, ensure_ascii=False, indent=4)
 
     def broker_tax(self):
         try:
             float(self.settings['broker_tax'])
-        except:
+        except Exception:
             self.settings['broker_tax'] = 0.0
             self.errors.append('Выстави налог брокера')
 
     def sell_tax(self):
         try:
             float(self.settings['sell_tax'])
-        except:
+        except Exception:
             self.settings['sell_tax'] = 0.0
             self.errors.append('Выстави налог на продажу')
 
@@ -46,5 +46,5 @@ class CheckSettings:
     def opacity(self):
         try:
             float(self.settings['opacity'])
-        except:
+        except Exception:
             self.settings['opacity'] = 1.0
