@@ -1,4 +1,4 @@
-````html
+
 <body style="font-size: 16px">
 <h1 align="center" style="color: #69b1f5">EVE profit helper</h1>
 
@@ -44,4 +44,3 @@
 Кнопка <img style="background-color: rgb(177, 218, 63)" src="\icons\copy.svg" height="24"/> позволяет скопировать в буфер обмена данные напротив которых она расположена
 
 </body>
-````
