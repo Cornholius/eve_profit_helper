@@ -1,5 +1,3 @@
-[click me to download](https://github.com/Cornholius/eve_profit_helper/raw/master/release/EVE%20profit%20helper.zip)
-
 <body style="font-size: 16px">
 <h1 align="center" style="color: #69b1f5">EVE profit helper</h1>
 
@@ -14,7 +12,7 @@
 3. папка ui
 4. папка icons
 
-<a href="https://github.com/Cornholius/eve_profit_helper/blob/master/release/EVE%20profit%20helper.zip"><h2>СКАЧАТЬ</h2></a>
+[Скачать архив](https://github.com/Cornholius/eve_profit_helper/raw/master/release/EVE%20profit%20helper.zip)
 <h2 style="color: #ede853">Настройка:</h2>
 нажав на кнопку с шестерёнкой попадаем в меню настройки. <img style="background-color: rgb(177, 218, 63)" src="\icons\settings.svg" height="24"/>
 <ul style="list-style-type: none">
