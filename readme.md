@@ -13,6 +13,7 @@
 3. папка ui
 4. папка icons
 
+<a href="https://github.com/Cornholius/eve_profit_helper/blob/master/release/EVE%20profit%20helper.zip"><h2>СКАЧАТЬ</h2></a>
 <h2 style="color: #ede853">Настройка:</h2>
 нажав на кнопку с шестерёнкой попадаем в меню настройки. <img style="background-color: rgb(177, 218, 63)" src="\icons\settings.svg" height="24"/>
 <ul style="list-style-type: none">
