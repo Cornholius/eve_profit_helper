@@ -1,3 +1,4 @@
+[click me to download](https://github.com/Cornholius/eve_profit_helper/blob/master/release/EVE%20profit%20helper.zip)
 
 <body style="font-size: 16px">
 <h1 align="center" style="color: #69b1f5">EVE profit helper</h1>
