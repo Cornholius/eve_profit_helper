@@ -177,7 +177,6 @@ class MainWindow(QtWidgets.QMainWindow):
         print('sell_price', self.sell_price)
 
 
-# (цена продажи - цена продажи * 0,04984) * кол-во - итоговая цена покупки
 class SettingsWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
@@ -259,7 +258,8 @@ rtfmWindow_widget.addWidget(rtfmWindow)
 
 # Вешаем на окна нужные нам флаги
 mainWindow_widget.setWindowOpacity(check.settings['opacity'])
-mainWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+mainWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint | Qt.FramelessWindowHint)
+# mainWindow_widget.setWindowFlags(Qt.FramelessWindowHint)
 settingsWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint)
 rtfmWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint)
 settingsWindow_widget.setWindowOpacity(check.settings['opacity'])
