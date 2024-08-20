@@ -143,7 +143,7 @@ transition: all 1s;
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="quick_sale_btn">
+     <widget class="QPushButton" name="custom_b_f_btn">
       <property name="minimumSize">
        <size>
         <width>80</width>
@@ -154,6 +154,7 @@ transition: all 1s;
        <font>
         <family>Arial</family>
         <pointsize>10</pointsize>
+        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
@@ -165,47 +166,7 @@ border-radius: 6px;
 }</string>
       </property>
       <property name="text">
-       <string>quick sale</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="rtfm">
-      <property name="minimumSize">
-       <size>
-        <width>100</width>
-        <height>26</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>100</width>
-        <height>26</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>10</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">#rtfm {
-border: 1px solid;
-border-radius: 6px;
-background-color: rgb(177, 218, 63);
-}
-
-#rtfm:hover {
-background-color: rgb(33, 240, 209);
-transition: all 1s;
-}
-
-</string>
-      </property>
-      <property name="text">
-       <string>RTFM</string>
+       <string>custom B.F.</string>
       </property>
      </widget>
     </item>

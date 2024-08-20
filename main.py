@@ -61,13 +61,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi('ui/mainWindow.ui', self)
+        loadUi('ui\mainWindow.ui', self)
         self.sell = self.buy = self.profit = self.broker_fee = self.sales_tax = self.margin = 0
         self.sell_price = self.buy_price = 0.0
         self.file_with_prices = []
         self.settings_btn.clicked.connect(SettingsWindow.show_window)
-        self.quick_sale_btn.clicked.connect(self.quick_sale)
-        self.rtfm.clicked.connect(RtfmWindow.show_window)
+        self.custom_b_f_btn.clicked.connect(self.quick_sale)
+        # self.rtfm.clicked.connect(RtfmWindow.show_window)
         self.copy_sell_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.sell_price))
         self.copy_buy_price_btn.clicked.connect(lambda: self.copy_to_clopboard(self.buy_price))
         self.check_quick_sale_btn_color()
@@ -76,16 +76,16 @@ class MainWindow(QtWidgets.QMainWindow):
         QApplication.clipboard().setText(str(data))
 
     def check_quick_sale_btn_color(self):
-        if check.settings['quick_sale']:
-            self.quick_sale_btn.setStyleSheet(f'background-color: #C23333;border: 1px solid;border-radius: 6px;')
+        if check.settings['custom_bf']:
+            self.custom_b_f_btn.setStyleSheet(f'background-color: #C23333;border: 1px solid;border-radius: 6px;')
         else:
-            self.quick_sale_btn.setStyleSheet(f'background-color: #B1DA3F;border: 1px solid;border-radius: 6px;')
+            self.custom_b_f_btn.setStyleSheet(f'background-color: #B1DA3F;border: 1px solid;border-radius: 6px;')
 
     def quick_sale(self):
-        if check.settings['quick_sale']:
-            check.settings['quick_sale'] = False
+        if check.settings['custom_bf']:
+            check.settings['custom_bf'] = False
         else:
-            check.settings['quick_sale'] = True
+            check.settings['custom_bf'] = True
         check.renew_settings()
         self.check_quick_sale_btn_color()
 
@@ -132,6 +132,8 @@ class MainWindow(QtWidgets.QMainWindow):
         str_buy_price = format(self.buy, '.2f')[:5]
         sell_price_with_bid = float(0)
         buy_price_with_bid = float(0)
+        broker_tax = float(check.settings['broker_tax'])
+        sell_tax = float(check.settings['sell_tax'])
         print("str_sell_price", str_sell_price)
         print("str_buy_price", str_buy_price)
 
@@ -159,20 +161,22 @@ class MainWindow(QtWidgets.QMainWindow):
             sell_price_with_bid = self.sell + 0.01
             buy_price_with_bid = self.buy + 0.01
 
-        if check.settings['quick_sale']:
-            broker_tax = 0
+        if check.settings['custom_bf']:
+            custom_broker_tax = 0.5
         else:
-            broker_tax = float(check.settings['broker_tax'])
-        sell_tax = float(check.settings['sell_tax'])
+
+            custom_broker_tax = broker_tax
 
         #   готовые цены для выставления ордера
         self.sell_price = float(sell_price_with_bid)
         self.buy_price = float(buy_price_with_bid)
         self.broker_fee = self.sell_price * broker_tax / 100
         self.sales_tax = self.sell_price * sell_tax / 100
-        self.profit = self.sell_price - self.broker_fee - self.sales_tax - (self.buy_price + self.buy_price * 0.0138)
-        self.margin = (self.sell_price - self.buy_price - self.broker_fee - self.sales_tax) / self.sell_price * 100
+        self.profit = self.sell_price - self.broker_fee - self.sales_tax - (self.buy_price + (self.buy_price * custom_broker_tax) / 100)
+        # self.margin = (self.sell_price - self.buy_price - self.broker_fee - self.sales_tax) / self.sell_price * 100
+        self.margin = self.profit / (self.sell_price - self.broker_fee - self.sales_tax) * 100
         self.set_values()
+
         print('buy_price', self.buy_price)
         print('sell_price', self.sell_price)
 
@@ -186,6 +190,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         self.market_logs_btn.clicked.connect(self.find_logs_path)
         self.sell_tax_value.setValue(check.settings['sell_tax'])
         self.broker_tax_value.setValue(check.settings['broker_tax'])
+        self.custom_broker_tax_value.setValue(check.settings['custom_broker_tax'])
         self.sell_order_radius_count.setValue(check.settings['sell_radius'])
         self.buy_order_radius_count.setValue(check.settings['buy_radius'])
         self.on_top_checkBox.setChecked(bool(check.settings['always_on_top']))
@@ -215,6 +220,7 @@ class SettingsWindow(QtWidgets.QMainWindow):
         data = check.load_settings()
         data['broker_tax'] = self.broker_tax_value.value()
         data['sell_tax'] = self.sell_tax_value.value()
+        data['custom_broker_tax'] = self.custom_broker_tax_value.value()
         data['sell_radius'] = self.sell_order_radius_count.value()
         data['buy_radius'] = self.buy_order_radius_count.value()
         data['always_on_top'] = self.on_top_checkBox.isChecked()
@@ -225,20 +231,20 @@ class SettingsWindow(QtWidgets.QMainWindow):
         mainWindow_widget.show()
 
 
-class RtfmWindow(QtWidgets.QMainWindow):
-
-    def __init__(self):
-        super(RtfmWindow, self).__init__()
-        loadUi('ui/rtfm.ui', self)
-        self.ok_btn.clicked.connect(self.go_back)
-
-    def show_window(self):
-        rtfmWindow_widget.show()
-        mainWindow_widget.hide()
-    
-    def go_back(self):
-        rtfmWindow_widget.hide()
-        mainWindow_widget.show()
+# class RtfmWindow(QtWidgets.QMainWindow):
+#
+#     def __init__(self):
+#         super(RtfmWindow, self).__init__()
+#         loadUi('ui/rtfm.ui', self)
+#         self.ok_btn.clicked.connect(self.go_back)
+#
+#     def show_window(self):
+#         rtfmWindow_widget.show()
+#         mainWindow_widget.hide()
+#
+#     def go_back(self):
+#         rtfmWindow_widget.hide()
+#         mainWindow_widget.show()
 
 
 app = QtWidgets.QApplication(argv)
@@ -252,16 +258,16 @@ settingsWindow = SettingsWindow()
 settingsWindow_widget = QtWidgets.QStackedWidget()
 settingsWindow_widget.addWidget(settingsWindow)
 
-rtfmWindow = RtfmWindow()
-rtfmWindow_widget = QtWidgets.QStackedWidget()
-rtfmWindow_widget.addWidget(rtfmWindow)
+# rtfmWindow = RtfmWindow()
+# rtfmWindow_widget = QtWidgets.QStackedWidget()
+# rtfmWindow_widget.addWidget(rtfmWindow)
 
 # Вешаем на окна нужные нам флаги
 mainWindow_widget.setWindowOpacity(check.settings['opacity'])
 mainWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint | Qt.FramelessWindowHint)
 # mainWindow_widget.setWindowFlags(Qt.FramelessWindowHint)
 settingsWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint)
-rtfmWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint)
+# rtfmWindow_widget.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowMinimizeButtonHint)
 settingsWindow_widget.setWindowOpacity(check.settings['opacity'])
 if check.settings['always_on_top']:
     mainWindow_widget.setWindowFlag(Qt.WindowStaysOnTopHint)

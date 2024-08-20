@@ -1,9 +1,10 @@
 {
     "broker_tax": 1.38,
     "sell_tax": 2.02,
+    "custom_broker_tax": 0.5,
     "sell_radius": 0,
     "buy_radius": 1,
-    "quick_sale": false,
+    "custom_bf": true,
     "logs_path": "C:/Users/lyi/Documents/EVE/logs/Marketlogs",
     "always_on_top": true,
     "opacity": 1.0,
